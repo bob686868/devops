@@ -1,6 +1,11 @@
 pipeline {
     agent any
     stages {
+        stage('Initialize') {
+            steps {
+                echo 'Successfully pulled Jenkinsfile from repository. Starting pipeline...'
+            }
+        }
         stage('Install Dependencies') {
             steps {
                 dir('myapp') {
