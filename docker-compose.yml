@@ -1,0 +1,25 @@
+services:
+  frontend:
+    build: ./myapp
+    ports:
+      - "3000:80"
+  
+  backend:
+    build: ./api
+    ports:
+      - "3001:3001"
+    depends_on:
+      - my-mysql-db
+
+  my-mysql-db:
+    container_name: my-mysql-db
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password123
+      MYSQL_DATABASE: my_db
+    volumes:
+      - ./db-init:/docker-entrypoint-initdb.d 
+      - db_data:/var/lib/mysql                # For persistent storage
+
+volumes:
+  db_data:  # Defines a named volume managed by Docker
