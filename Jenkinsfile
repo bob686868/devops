@@ -11,7 +11,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 dir('myapp') {
-                    sh 'npm install'
+                    sh '/usr/bin/npm install'
                 }
             }
         }
@@ -38,3 +38,4 @@ pipeline {
         }
     }
 }
+
