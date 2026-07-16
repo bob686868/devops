@@ -1,11 +1,20 @@
 pipeline {
     agent any
+    tools { nodejs 'Node-20' } // Ensure this matches the name in Global Tool Configuration
     stages {
-        stage('Hello') {
+        stage('Install Dependencies') {
             steps {
-                echo 'Hello, World from the Jenkinsfile!'
-                // You can add more steps here as you build your project
-                sh 'echo "This file was read from the project root!"'
+                dir('myapp') {
+                    sh 'npm install'
+                }
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                dir('myapp') {
+                    // This runs all tests inside the 'src' folder automatically
+                    sh 'npm test -- --watchAll=false'
+                }
             }
         }
     }
