@@ -8,36 +8,28 @@ pipeline {
             }
         }
         
-        stage('Install Dependencies') {
-            // Move agent definition here, at the stage level
+        stage('Nodejs stage') {
             agent {
                 docker { 
                     image 'node:20-alpine'
                 }
             }
-            steps {
-                dir('myapp') {
-                    // Note: npm is usually in the PATH of the node image, 
-                    // so /usr/bin/npm is likely unnecessary.
-                    sh 'npm install'
+            stages{
+                stage('Install Dependencies'){
+                    steps {
+                        dir('myapp') { sh 'npm install'}
+                    }
+                }
+            
+                stage('Run Tests') {
+                    steps {
+                        dir('myapp') {
+                            sh 'npm test -- --watchAll=false'
+                        }
+                    }
                 }
             }
-        }
-        
-        stage('Run Tests') {
-            // Note: If you want to use the same container for tests, 
-            // you must define the agent here too, or wrap stages in a single agent.
-            agent {
-                docker { 
-                    image 'node:20-alpine'
-                }
             }
-            steps {
-                dir('myapp') {
-                    sh 'npm test -- --watchAll=false'
-                }
-            }
-        }
         
         stage('Build Docker Image') {
             steps {
@@ -49,3 +41,4 @@ pipeline {
         }
     }
 }
+

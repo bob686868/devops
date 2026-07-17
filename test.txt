@@ -1,0 +1,38 @@
+pipeline{
+    agent any
+    stages{
+        stage('inti'){
+            steps{
+                echo 'starting'
+            }
+        }
+        stage('install dependencies'){
+            agent{
+                docker{
+                 image 'node:20-alpine
+                }
+            }
+            steps{
+                dir('myapp'){
+                    sh 'npm install'
+                }
+            }
+        }
+        stage(' run image'){
+            steps{
+
+            dir('myapp'){
+                sh 'npm tets --watchAll=false'
+                }
+            }
+        }
+        stage('build docker iamge'){
+            steps{
+
+            dir('pai'){
+                sh 'docker build -t '
+            }
+            }
+        }
+    }
+}
