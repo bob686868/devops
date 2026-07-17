@@ -34,7 +34,11 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 dir('api') {
-                    sh 'docker build -t jenkins-backend .'
+                    sh 'docker build -t backend12 .'
+                    sh 'docker image prune -f'
+                }
+                dir('myapp'){
+                    sh 'docker build -t frontend8 .,'
                     sh 'docker image prune -f'
                 }
             }
