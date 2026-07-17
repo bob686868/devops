@@ -10,6 +10,11 @@ pipeline {
         
         stage('Install Dependencies') {
             steps {
+                agent {
+                    docker { 
+                        image 'node:20-alpine' // Specify the Node.js version you need
+                    }
+                }
                 dir('myapp') {
                     sh '/usr/bin/npm install'
                 }
