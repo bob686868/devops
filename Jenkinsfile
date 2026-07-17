@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Initialize') {
             steps {
-                echo 'Successfully pulled Jenkinsfile from repository. Starting pipeline...'
+                echo 'Successfully pulled Jenkinsfile. Starting pipeline...'
             }
         }
         
@@ -29,20 +29,25 @@ pipeline {
                     }
                 }
             }
-            }
+        }
         
-        stage('Build Docker Image') {
+        stage('Build Docker Images') {
             steps {
-                dir('api') {
-                    sh 'docker build -t backend12 .'
-                    sh 'docker image prune -f'
-                }
-                dir('myapp'){
-                    sh 'docker build -t frontend8 .'
-                    sh 'docker image prune -f'
-                }
+                // Building from root, matching your file structure
+                sh 'docker build -t backend12 ./api'
+                sh 'docker build -t frontend8 ./myapp'
+                sh 'docker image prune -f'
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                echo 'Deploying to Minikube...'
+                // Using the specific files located in the root
+                sh 'kubectl apply -f backend.yaml'
+                sh 'kubectl apply -f db.yaml'
+                sh 'kubectl apply -f frontend.yaml'
             }
         }
     }
 }
-

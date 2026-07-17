@@ -5,3 +5,16 @@ RUN apt-get update && apt-get install -y docker.io
 # Give Jenkins user permission to use the Docker socket
 RUN usermod -aG docker jenkins
 USER jenkins
+
+
+
+
+
+
+
+
+FROM jenkins/jenkins:lts
+USER root
+RUN apt-get update && apt-get install -y docker.io kubectl
+RUN groupadd -f docker && usermod -aG docker jenkins
+USER jenkins
