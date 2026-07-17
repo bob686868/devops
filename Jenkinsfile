@@ -38,7 +38,7 @@ pipeline {
                     sh 'docker image prune -f'
                 }
                 dir('myapp'){
-                    sh 'docker build -t frontend8 .,'
+                    sh 'docker build -t frontend8 .'
                     sh 'docker image prune -f'
                 }
             }
