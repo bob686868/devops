@@ -9,22 +9,31 @@ pipeline {
         }
         
         stage('Install Dependencies') {
-            steps {
-                agent {
-                    docker { 
-                        image 'node:20-alpine' // Specify the Node.js version you need
-                    }
+            // Move agent definition here, at the stage level
+            agent {
+                docker { 
+                    image 'node:20-alpine'
                 }
+            }
+            steps {
                 dir('myapp') {
-                    sh '/usr/bin/npm install'
+                    // Note: npm is usually in the PATH of the node image, 
+                    // so /usr/bin/npm is likely unnecessary.
+                    sh 'npm install'
                 }
             }
         }
         
         stage('Run Tests') {
+            // Note: If you want to use the same container for tests, 
+            // you must define the agent here too, or wrap stages in a single agent.
+            agent {
+                docker { 
+                    image 'node:20-alpine'
+                }
+            }
             steps {
                 dir('myapp') {
-                    // --watchAll=false is required for non-interactive CI environments
                     sh 'npm test -- --watchAll=false'
                 }
             }
@@ -33,14 +42,10 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 dir('api') {
-                    // Builds the image tagged as 'my-react-app'
                     sh 'docker build -t jenkins-backend .'
-                    
-                    // Automatically removes old, untagged image layers to save disk space
                     sh 'docker image prune -f'
                 }
             }
         }
     }
 }
-
